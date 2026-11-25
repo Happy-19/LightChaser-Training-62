@@ -33,7 +33,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 /* USER CODE END PTD */
 
@@ -186,13 +185,6 @@ int _write(int file, char *ptr, int len){
     HAL_UART_Transmit(&huart1, (uint8_t *)ptr, len, HAL_MAX_DELAY);
     return len;
 }
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-  // 计时器3用于舵机
-  if(htim==&htim3){
-      // 600是舵机会转动的下限，2400是转动的上限，先乘后除才能得到正常结果
-      
-    }
-  }
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
   if(huart->Instance != USART1)return;
   // 进行一个ascii的转换数据才能被正常使用
@@ -207,7 +199,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
   }
   else if(ch=='\n'||ch=='\r'||ch==' '){
     if(flag2){cmd[0]=data;
-    __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,500+(cmd[0]*1800)/180);}
+    // 计时器3用于舵机但是舵机转动的角度是由串口发送的数据决定的所以ccr的set写在串口中断里
+    // 600是舵机会转动的下限，2400是转动的上限，先乘后除才能得到正常结果
+    __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,600+(cmd[0]*1800)/180);}
     data=0;
     flag2=0;
   }

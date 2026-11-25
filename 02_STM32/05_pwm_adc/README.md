@@ -37,4 +37,5 @@ PB6 -> TIM4_CH1 -> 与led相连控制呼吸灯
 工程配置如下
 ![alt text](05project.png)
 
-单片机打印和两种灯的翻转的演示见附件
+呼吸灯，串口发送角度舵机旋转和电位器adc的演示见附件
+https://github.com/Happy-19/LightChaser-Training-62/releases/download/v1.0/05_pwm_adc.mp4
